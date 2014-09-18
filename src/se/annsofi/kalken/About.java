@@ -1,3 +1,4 @@
+package se.annsofi.kalken;
 /*****************************************************
 TNM040
 Authors: Annsofi Pettersson & Gabriella Ivarsson

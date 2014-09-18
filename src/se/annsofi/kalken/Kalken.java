@@ -1,3 +1,4 @@
+package se.annsofi.kalken;
 /*****************************************************
 TNM040
 Authors: Annsofi Pettersson & Gabriella Ivarsson
@@ -7,20 +8,24 @@ University of Linköping - Campus Norrköping
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
+
 import java.applet.*; //to handle sounds
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
+
 import javax.swing.border.LineBorder; //a border class
+
 import java.lang.Object.*;
 
 
 
 public class Kalken extends JFrame implements ActionListener {
 
-private JButton btnOne, btnTwo, btnThree, btnFour, btnFive, btnSix, btnSeven, btnEight, btnNine, btnReset, btnLevel, btnHelp, btnAbout;
-private JLabel lblLevel, lblNrpoints, lblAnswer, lblSum, lblBig, lblProgress, lblTrack, lblBoard, lblPoints, lblKalken;
-private JTextArea txtSum;
+
+
 private static int sum=0, number=0, random=0, points=0;
 private boolean first = true;
 private static Object button;
@@ -28,159 +33,68 @@ private static int level=1, integer1 = 0, integer2 = 0;
 private ClassLoader cl;
 private static int THRESHOLD = 50;
 private static int ROOF = 20;
-private JMenuBar mnuBar;
-private JMenu mnuIcon, mnuFile;
-private JRadioButton chkHorse, chkBike, chkHuman;
-private ImageIcon imgHuman, imgBike, imgHorse;
-private JMenuItem itmExit, itmRestart;
+private GameBoard board;
 	
 	public Kalken() {
 		cl = ClassLoader.getSystemClassLoader();
 	//----------------------------MENU-----------------------------------//
-	mnuBar = new JMenuBar();
-	mnuIcon = new JMenu("Byt karaktär");
-	mnuFile = new JMenu("Arkiv");
-	itmExit = new JMenuItem("Avsluta");
-	itmRestart = new JMenuItem("Starta om");
-	
-	chkHuman = new JRadioButton("Människa", true);
-	chkHorse = new JRadioButton("Häst", false);
-	chkBike = new JRadioButton("Motorcykel", false);
-	
-	chkHuman.addActionListener(this);
-	chkHorse.addActionListener(this);
-	chkBike.addActionListener(this);
-	itmExit.addActionListener(this);
-	itmRestart.addActionListener(this);
-	
-	mnuFile.add(itmRestart);	
-	mnuFile.add(itmExit);
-	
-	mnuIcon.add(chkHuman);
-	mnuIcon.add(chkHorse);
-	mnuIcon.add(chkBike);
-	
-	mnuBar.add(mnuFile);
-	mnuBar.add(mnuIcon);
-	
-	setJMenuBar(mnuBar);
+	setUpMenu();
 	//----------------------------------------CENTER--------------------------------//
 	
-		//--------Buttons-------//
-		lblAnswer = new JLabel();
-		txtSum = new JTextArea(3,1);
-		lblSum = new JLabel(" = " + sum);
 		
-		//--------Layout-------//
-		txtSum.setBounds(45,50,250,190);
-		lblAnswer.setBounds(40,0,320,60);
-		txtSum.setLineWrap(true);
-		lblSum.setBounds(200,220,100,80);
-		txtSum.setBorder(null);
-		lblAnswer.setFont(new Font("Courier", Font.BOLD, 18));
-		txtSum.setFont(new Font("Courier", Font.BOLD, 16));
-		lblSum.setFont(new Font("Courier", Font.BOLD, 24));
-		txtSum.setForeground(Color.WHITE);
-		//Color myColor = new Color(61, 115, 156);
-		txtSum.setBackground(Color.BLACK);
-		txtSum.setEditable(false);
 	
 		//--------Layout-------//
 		JPanel pnlCenter = new JPanel();
 		pnlCenter.setLayout(null);  
-	
-		//pnlCenter.setBackground(myColor);
 		pnlCenter.setPreferredSize(new Dimension(3200,200));
 		
+		setUpBoard(pnlCenter);
 		//--------Add-------//
-		pnlCenter.add(txtSum);
-		pnlCenter.add(lblSum);
-		pnlCenter.add(lblAnswer);
+
 	
 	//---------------------------------------WEST-----------------------------------//
 		//--------Buttons-------//
-		lblKalken = new JLabel(new ImageIcon(cl.getResource("kalken.png")));
-		btnOne = new JButton(new ImageIcon(cl.getResource("1.png")));
-		btnTwo = new JButton(new ImageIcon(cl.getResource("2.png")));
-		btnThree = new JButton(new ImageIcon(cl.getResource("3.png")));
-		btnFour = new JButton(new ImageIcon(cl.getResource("4.png")));
-		btnFive = new JButton(new ImageIcon(cl.getResource("5.png")));
-		btnSix = new JButton(new ImageIcon(cl.getResource("6.png")));
-		btnSeven = new JButton(new ImageIcon(cl.getResource("7.png")));
-		btnEight = new JButton(new ImageIcon(cl.getResource("8.png")));
-		btnNine = new JButton(new ImageIcon(cl.getResource("9.png")));
-		btnReset = new JButton(new ImageIcon(cl.getResource("angra.png")));
-		btnLevel = new JButton(new ImageIcon(cl.getResource("level.png")));
-
-		//--------Layout-------//
-		lblKalken.setBounds(5,8,92,33);
-		btnOne.setBounds(25,40,45,45);
-		btnTwo.setBounds(75,40,45,45);
-		btnThree.setBounds(125,40,45,45);
-		btnFour.setBounds(25,90,45, 45);
-		btnFive.setBounds(75,90,45, 45);
-		btnSix.setBounds(125,90,45, 45);
-		btnSeven.setBounds(25,140, 45, 45);
-		btnEight.setBounds(75,140,45, 45);
-		btnNine.setBounds(125,140,45, 45);
-		btnLevel.setBounds(5,200,110, 45);
-		btnReset.setBounds(120,200,70, 45);
 		
-		btnLevel.setEnabled(false);
-		JPanel pnlWest = new JPanel();
-		pnlWest.setLayout(null);  
-		pnlWest.setPreferredSize(new Dimension(200,200));
 		
-		 
+		JPanel pnlWest = new JPanel();		
+		NumberPad numberPad = setUpNumberPad(pnlWest);
 		//--------Add-------//
-		pnlWest.add(lblKalken);
-		pnlWest.add(btnOne);
-		pnlWest.add(btnTwo);
-		pnlWest.add(btnThree);
-		pnlWest.add(btnFour);
-		pnlWest.add(btnFive);
-		pnlWest.add(btnSix);
-		pnlWest.add(btnSeven);
-		pnlWest.add(btnEight);
-		pnlWest.add(btnNine);
-		pnlWest.add(btnReset);
-		pnlWest.add(btnLevel);
+
 
 	//---------------------------------------EAST------------------------------------//
 		//-------Labels-------//
-		lblLevel = new JLabel("Level 1");
-		lblPoints = new JLabel("Poäng");
-		lblNrpoints = new JLabel("0");
-		lblBoard  = new JLabel(new ImageIcon(cl.getResource("board.png")));
-		btnHelp = new JButton(new ImageIcon(cl.getResource("helpbutton.png")));
-		btnAbout = new JButton(new ImageIcon(cl.getResource("about.png")));
+		GameBoard.Builder gameBoardBuilder = new GameBoard.Builder(); 
+
+				
+		board = gameBoardBuilder.lblLevel(new JLabel("Level 1"))
+		.lblPoints(new JLabel("Poäng"))
+		.lblNrpoints(new JLabel("0"))
+		.lblBoard(new JLabel(new ImageIcon(cl.getResource("board.png"))))
+		.btnHelp(new JButton(new ImageIcon(cl.getResource("helpbutton.png"))))
+		.btnAbout(new JButton(new ImageIcon(cl.getResource("about.png"))))
+		.numberPad(numberPad)
+		.build();
+
+		
 		
 		//--------Layout--------//
-		lblLevel.setBounds(15,40,60,60);
-		lblPoints.setBounds(15,90,60,60);
-		lblNrpoints.setBounds(40,110,60,60);
-		lblBoard.setBounds(0,50,80,130);
-		btnHelp.setBounds(20,15,30, 30);
-		btnAbout.setBounds(55,15,30, 30);
+		board.getLblLevel().setBounds(15,40,60,60);
+		board.getLblPoints().setBounds(15,90,60,60);
+		board.getLblNrpoints().setBounds(40,110,60,60);
+		board.getLblBoard().setBounds(0,50,80,130);
+		board.getBtnHelp().setBounds(20,15,30, 30);
+		board.getBtnAbout().setBounds(55,15,30, 30);
 		
-		lblLevel.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
-		lblPoints.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
-		lblNrpoints.setFont(new Font("Courier", Font.BOLD, 18));
+		board.getLblLevel().setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
+		board.getLblPoints().setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
+		board.getLblNrpoints().setFont(new Font("Courier", Font.BOLD, 18));
+		
+		
 		JPanel pnlEast = new JPanel();
-		pnlEast.setLayout(null);  
-		
-		pnlEast.setPreferredSize(new Dimension(100,200));
-		
-		//----------Add--------//
-		pnlEast.add(lblLevel);
-		pnlEast.add(lblNrpoints);
-		pnlEast.add(lblPoints);
-		pnlEast.add(lblBoard);
-		pnlEast.add(btnHelp);
-		pnlEast.add(btnAbout);
+		setUpEast(pnlEast);
 			
 	//--------------------------------------SOUTH-------------------------------------//	
-
+/*
 		lblBig = new JLabel();
 		random();
 		lblTrack = new JLabel(new ImageIcon(cl.getResource("travbana.png")));
@@ -209,22 +123,10 @@ private JMenuItem itmExit, itmRestart;
 		pnlSouth.add(lblTrack);
 
 	
-	
+	*/
 		
 	//-----------------------------ACTIONLISTENER-----------------------------------//
-	btnOne.addActionListener(this);
-	btnTwo.addActionListener(this); 
-	btnThree.addActionListener(this);
-	btnFour.addActionListener(this);
-	btnFive.addActionListener(this);
-	btnSix.addActionListener(this);
-	btnSeven.addActionListener(this);
-	btnEight.addActionListener(this);
-	btnNine.addActionListener(this);
-	btnReset.addActionListener(this);
-	btnLevel.addActionListener(this);
-	btnHelp.addActionListener(this);
-	btnAbout.addActionListener(this);
+	setActionListners();
 	
 	//-----------------------------------CONTAINER----------------------------------//
 		Container c = getContentPane();
@@ -232,7 +134,7 @@ private JMenuItem itmExit, itmRestart;
 		c.add(pnlWest, BorderLayout.WEST);   
 		c.add(pnlEast, BorderLayout.EAST);
 		c.add(pnlCenter, BorderLayout.CENTER);
-		c.add(pnlSouth, BorderLayout.SOUTH);
+		//c.add(pnlSouth, BorderLayout.SOUTH);
 		setSize(650,425);
 		setVisible(true);
 		setResizable(false);
@@ -240,8 +142,134 @@ private JMenuItem itmExit, itmRestart;
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 	}
+	private void setUpEast(JPanel pnlEast) {
+		pnlEast.setLayout(null);  		
+		pnlEast.setPreferredSize(new Dimension(100,200));
+		
+		//----------Add--------//
+		pnlEast.add(board.getLblLevel());
+		pnlEast.add(board.getLblPoints());
+		pnlEast.add(board.getLblNrpoints());
+		pnlEast.add(board.getLblBoard());
+		pnlEast.add(board.getBtnHelp());
+		pnlEast.add(board.getBtnAbout());
+	}
+	private void setUpBoard(JPanel panel) {
+	/*	//--------Buttons-------//
+		lblAnswer = new JLabel();
+		txtSum = new JTextArea(3,1);
+		lblSum = new JLabel(" = " + sum);
+		
+		//--------Layout-------//
+		txtSum.setBounds(45,50,250,190);
+		lblAnswer.setBounds(40,0,320,60);
+		txtSum.setLineWrap(true);
+		lblSum.setBounds(200,220,100,80);
+		txtSum.setBorder(null);
+		lblAnswer.setFont(new Font("Courier", Font.BOLD, 18));
+		txtSum.setFont(new Font("Courier", Font.BOLD, 16));
+		lblSum.setFont(new Font("Courier", Font.BOLD, 24));
+		txtSum.setForeground(Color.WHITE);
+		txtSum.setBackground(Color.BLACK);
+		txtSum.setEditable(false);
+		
+		panel.add(txtSum);
+		panel.add(lblSum);
+		panel.add(lblAnswer);*/
+	}
+	private NumberPad setUpNumberPad(JPanel panel) {
+		ArrayList<JButton> numberButtons = new ArrayList<JButton>();
+		numberButtons.add(new JButton(new ImageIcon(cl.getResource("1.png"))));
+		numberButtons.add(new JButton(new ImageIcon(cl.getResource("2.png"))));
+		numberButtons.add(new JButton(new ImageIcon(cl.getResource("3.png"))));
+		numberButtons.add(new JButton(new ImageIcon(cl.getResource("4.png"))));
+		numberButtons.add(new JButton(new ImageIcon(cl.getResource("5.png"))));
+		numberButtons.add(new JButton(new ImageIcon(cl.getResource("6.png"))));
+		numberButtons.add(new JButton(new ImageIcon(cl.getResource("7.png"))));
+		numberButtons.add(new JButton(new ImageIcon(cl.getResource("8.png"))));
+		numberButtons.add(new JButton(new ImageIcon(cl.getResource("9.png"))));
+		numberButtons.add(new JButton(new ImageIcon(cl.getResource("level.png"))));
+		numberButtons.add(new JButton(new ImageIcon(cl.getResource("angra.png"))));
+		
+		NumberPad numberPad = new NumberPad.Builder()
+		.lblKalken(new JLabel(new ImageIcon(cl.getResource("kalken.png"))))
+		.numberButtons(numberButtons)
+		.build();
+
+
+		//--------Layout-------//
+		numberPad.getLblKalken().setBounds(5,8,92,33);
+		numberPad.getNumberButtons().get(0).setBounds(25,40,45,45);
+		numberPad.getNumberButtons().get(1).setBounds(75,40,45,45);
+		numberPad.getNumberButtons().get(2).setBounds(125,40,45,45);
+		numberPad.getNumberButtons().get(3).setBounds(25,90,45, 45);
+		numberPad.getNumberButtons().get(4).setBounds(75,90,45, 45);
+		numberPad.getNumberButtons().get(5).setBounds(125,90,45, 45);
+		numberPad.getNumberButtons().get(6).setBounds(25,140, 45, 45);
+		numberPad.getNumberButtons().get(7).setBounds(75,140,45, 45);
+		numberPad.getNumberButtons().get(8).setBounds(125,140,45, 45);
+		numberPad.getNumberButtons().get(9).setBounds(5,200,110, 45);
+		numberPad.getNumberButtons().get(10).setBounds(120,200,70, 45);
+		
+		numberPad.getNumberButtons().get(9).setEnabled(false);
+		
+		panel.add(numberPad.getLblKalken());
+		
+		JButton button;
+		for(int i=0; i < numberPad.getNumberButtons().size(); i++){
+			button = numberPad.getNumberButtons().get(i);
+			setActionListners(button);
+			panel.add(button);
+		}
+		
+		panel.setLayout(null);  
+		panel.setPreferredSize(new Dimension(200,200));
+		
+		return numberPad;
+	}
+	
+	
+	private void setActionListners(JButton button) {
+		button.addActionListener(this);
+	}
+	
+	private void setActionListners() {
+/*		btnHelp.addActionListener(this);
+		btnAbout.addActionListener(this);*/
+	}
+	
+	private void setUpMenu() {
+	/*	mnuBar = new JMenuBar();
+		mnuIcon = new JMenu("Byt karaktär");
+		mnuFile = new JMenu("Arkiv");
+		itmExit = new JMenuItem("Avsluta");
+		itmRestart = new JMenuItem("Starta om");
+		
+		chkHuman = new JRadioButton("Människa", true);
+		chkHorse = new JRadioButton("Häst", false);
+		chkBike = new JRadioButton("Motorcykel", false);
+		
+		chkHuman.addActionListener(this);
+		chkHorse.addActionListener(this);
+		chkBike.addActionListener(this);
+		itmExit.addActionListener(this);
+		itmRestart.addActionListener(this);
+		
+		mnuFile.add(itmRestart);	
+		mnuFile.add(itmExit);
+		
+		mnuIcon.add(chkHuman);
+		mnuIcon.add(chkHorse);
+		mnuIcon.add(chkBike);
+		
+		mnuBar.add(mnuFile);
+		mnuBar.add(mnuIcon);
+		
+		setJMenuBar(mnuBar);*/
+	}
 	//-------------------------------BUTTONENABLER-----------------------------------//
 	public void buttonEnabler(){
+	/*	
 				btnLevel.setEnabled(true);
 				btnOne.setEnabled(false);
 				btnTwo.setEnabled(false);
@@ -252,12 +280,12 @@ private JMenuItem itmExit, itmRestart;
 				btnSeven.setEnabled(false);
 				btnEight.setEnabled(false);
 				btnNine.setEnabled(false);
-				btnReset.setEnabled(false);
+				btnReset.setEnabled(false); */
 	}
 	
 	//-------------------------------LEVELCHOOSER-----------------------------------//
 	public void levelChooser(){
-			if(level == 1){
+		/*	if(level == 1){
 			level1();
 			lblAnswer.setText("Addition ?+? = " + random);
 			lblLevel.setText("Level 1");
@@ -278,19 +306,19 @@ private JMenuItem itmExit, itmRestart;
 			level4();
 			lblAnswer.setText("Division " +random+ " / ? = " + integer1);
 			lblLevel.setText("Level 4");
-		}
+		}*/
 	}
 	
 	//------------------------------------MOVE--------------------------------------//
 	public void move(){
-	int tempx = (int)(540/THRESHOLD)*points;
-	lblProgress.setBounds(tempx,40,100,53);	
+	/*int tempx = (int)(540/THRESHOLD)*points;
+	lblProgress.setBounds(tempx,40,100,53);	*/
 	}
 	
 	//-----------------------------------RANDOM-------------------------------------//
 	public void random(){
 		//-------Labels-------//
-		if (level==1){		
+		/*if (level==1){		
 			random = (int) Math.ceil( Math.random() * (ROOF-1));
 			lblAnswer.setText("Addition ? + ? = " + random);
 			lblLevel.setText("Level 1");
@@ -317,18 +345,18 @@ private JMenuItem itmExit, itmRestart;
 			lblAnswer.setText("Division " +random+ " / ? = " + integer1);	
 	
 			sum = 0;		
-		}
+		}*/
 	}
    
 	//-----------------------------------EMPTY--------------------------------------//
 	public void empty(){
-		txtSum.setText("");
-		first = true;
+		/*txtSum.setText("");
+		first = true;*/
 	}
 
 	//---------------------------------RESTART---------------------------------------//
 	public void restart(){	
-			level=1;
+		/*	level=1;
 			sum=0;
 			points=0;
 			lblNrpoints.setText(""+ points);
@@ -337,12 +365,12 @@ private JMenuItem itmExit, itmRestart;
 			random();
 			empty();
 			lblProgress.setBounds(0,40,100,53);
-			levelChooser();	
+			levelChooser();	*/
 	}
 	
 	//----------------------------------LEVEL 1-------------------------------------//
 	public void level1(){
-		if (first == true){
+	/*	if (first == true){
 			lblBig.setText("");
 		}
 		//---------1--------//
@@ -552,13 +580,13 @@ private JMenuItem itmExit, itmRestart;
 				lblProgress.setBounds(0,40,100,53);
 				buttonEnabler();
 				Help.setLevel(level);
-			}	
+			}	*/
 			
 	}
 	
 	//----------------------------------LEVEL 2-------------------------------------//
 	public void level2(){
-		if (first == true){
+	/*	if (first == true){
 			lblBig.setText("");
 		}
 		//---------1--------//
@@ -741,12 +769,12 @@ private JMenuItem itmExit, itmRestart;
 				lblSum.setText("= " + sum);
 				buttonEnabler();
 				Help.setLevel(level);
-			}		
+			}		*/
 	}
 	
 	//----------------------------------LEVEL 3-------------------------------------//
 	public void level3(){
-		if (first == true){
+	/*	if (first == true){
 			lblBig.setText("");
 		}
 		//---------1--------//
@@ -929,13 +957,13 @@ private JMenuItem itmExit, itmRestart;
 				lblSum.setText("= " + sum);
 				buttonEnabler();
 				Help.setLevel(level);
-			}	
+			}	*/
 				
 	}
 	
 		//-----------------------------LEVEL 4--------------------------------------//
 	public void level4(){
-		if (first == true){
+	/*	if (first == true){
 			lblBig.setText("");
 		}
 		//---------1--------//
@@ -1002,12 +1030,12 @@ private JMenuItem itmExit, itmRestart;
 			buttonEnabler();
 			restart();
 			End endframe = new End();	
-			}	
+			}	*/
 	}
 	
 	//------------------------------ACTIONPERFORMED--------------------------------//	
 	public void actionPerformed(ActionEvent e) {
-		button = e.getSource();
+	/*	button = e.getSource();
 
 		if (button==btnLevel){
 				btnLevel.setEnabled(false);
@@ -1063,7 +1091,7 @@ private JMenuItem itmExit, itmRestart;
 			 levelChooser();
 			 }
 		
-				
+			*/	
 	}
 	
 	
