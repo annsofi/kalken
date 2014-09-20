@@ -8,23 +8,17 @@ University of Linköping - Campus Norrköping
 
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
-
 import java.applet.*; //to handle sounds
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
-
 import javax.swing.border.LineBorder; //a border class
-
 import java.lang.Object.*;
 
 
 
 public class Kalken extends JFrame implements ActionListener {
-
-
 
 private static int sum=0, number=0, random=0, points=0;
 private boolean first = true;
@@ -38,95 +32,83 @@ private GameBoard board;
 	public Kalken() {
 		cl = ClassLoader.getSystemClassLoader();
 	//----------------------------MENU-----------------------------------//
-	setUpMenu();
-	//----------------------------------------CENTER--------------------------------//
-	
-		
-	
-		//--------Layout-------//
-		JPanel pnlCenter = new JPanel();
-		pnlCenter.setLayout(null);  
-		pnlCenter.setPreferredSize(new Dimension(3200,200));
-		
-		setUpBoard(pnlCenter);
-		//--------Add-------//
+	    setUpMenu();
 
-	
-	//---------------------------------------WEST-----------------------------------//
-		//--------Buttons-------//
 		
+
+		JPanel pnlWest =  setUpNumberPadPanel();
+
+		JPanel pnlEast = createPanelWithSize(100,200);
+			
+		JPanel pnlSouth = createPanelWithSize(550,100);
+			
 		
-		JPanel pnlWest = new JPanel();		
-		NumberPad numberPad = setUpNumberPad(pnlWest);
-		//--------Add-------//
-
-
-	//---------------------------------------EAST------------------------------------//
-		//-------Labels-------//
-		GameBoard.Builder gameBoardBuilder = new GameBoard.Builder(); 
-
-				
-		board = gameBoardBuilder.lblLevel(new JLabel("Level 1"))
+		board = new GameBoard.Builder()
+		.lblLevel(new JLabel("Level 1"))
 		.lblPoints(new JLabel("Poäng"))
 		.lblNrpoints(new JLabel("0"))
 		.lblBoard(new JLabel(new ImageIcon(cl.getResource("board.png"))))
 		.btnHelp(new JButton(new ImageIcon(cl.getResource("helpbutton.png"))))
 		.btnAbout(new JButton(new ImageIcon(cl.getResource("about.png"))))
-		.numberPad(numberPad)
+		.lblTrack(new JLabel(new ImageIcon(cl.getResource("travbana.png"))))
+		.lblProgress(new JLabel(new ImageIcon(cl.getResource("human.png"))))
+		.txtSum( new JTextArea(3,1))
+		.lblSum( new JLabel(" = " + sum))
+		.lblAnswer(new JLabel())
+		.lblBig(new JLabel())
 		.build();
+		
+		//random();
 
+		//imgBike=new ImageIcon(cl.getResource("bike.png"));
+		//imgHorse=new ImageIcon(cl.getResource("horse.png"));
 		
 		
-		//--------Layout--------//
-		board.getLblLevel().setBounds(15,40,60,60);
-		board.getLblPoints().setBounds(15,90,60,60);
-		board.getLblNrpoints().setBounds(40,110,60,60);
-		board.getLblBoard().setBounds(0,50,80,130);
-		board.getBtnHelp().setBounds(20,15,30, 30);
-		board.getBtnAbout().setBounds(55,15,30, 30);
-		
-		board.getLblLevel().setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
-		board.getLblPoints().setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
-		board.getLblNrpoints().setFont(new Font("Courier", Font.BOLD, 18));
-		
-		
-		JPanel pnlEast = new JPanel();
-		setUpEast(pnlEast);
+		JPanel pnlCenter = createPanelWithSize(3200,200);
+		board.getLblAnswer().setFont(new Font("Courier", Font.BOLD, 18));
+		addComponentToPanel(board.getLblAnswer(), pnlCenter, new Bounds(40,0,320,60));
 			
-	//--------------------------------------SOUTH-------------------------------------//	
-/*
-		lblBig = new JLabel();
-		random();
-		lblTrack = new JLabel(new ImageIcon(cl.getResource("travbana.png")));
-		imgHuman=new ImageIcon(cl.getResource("human.png"));
-		imgBike=new ImageIcon(cl.getResource("bike.png"));
-		imgHorse=new ImageIcon(cl.getResource("horse.png"));
+		board.getLblSum().setFont(new Font("Courier", Font.BOLD, 24));
+		addComponentToPanel(board.getLblSum(), pnlCenter, new Bounds(200,220,100,80));
 		
-		lblProgress = new JLabel(imgHuman);
-		
+		board.getTxtSum().setLineWrap(true);		
+		board.getTxtSum().setBorder(null);	
+		board.getTxtSum().setFont(new Font("Courier", Font.BOLD, 16));		
+		board.getTxtSum().setForeground(Color.WHITE);		
+		board.getTxtSum().setBackground(Color.BLACK);
+		board.getTxtSum().setEditable(false);
+		board.getTxtSum().setBounds(45,50,250,190);
+		pnlCenter.add(board.getTxtSum());
+				
 
+		board.getLblLevel().setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
+		addComponentToPanel(board.getLblLevel(), pnlEast, new Bounds(15,40,60,60));
 		
-		//--------Layout--------//
-		lblBig.setBounds(300,10,300,60);
-		lblTrack.setBounds(0,0,650,100);
-		lblProgress.setBounds(0,40,100,60);
-		JPanel pnlSouth = new JPanel();		
-		pnlSouth.setLayout(null);  
-		lblBig.setForeground(Color.WHITE);
-		pnlSouth.setPreferredSize(new Dimension(550,100));
+		board.getLblPoints().setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
+		addComponentToPanel(board.getLblPoints(), pnlEast, new Bounds(15,90,60,60));
 		
-		//----------Add--------//
-	
-		pnlSouth.add(lblBig);
+		board.getLblNrpoints().setFont(new Font("Courier", Font.BOLD, 18));
+		addComponentToPanel(board.getLblNrpoints(), pnlEast, new Bounds(40,110,60,60));
 		
-		pnlSouth.add(lblProgress);
-		pnlSouth.add(lblTrack);
+		addComponentToPanel(board.getLblBoard(), pnlEast, new Bounds(0,50,80,130));
+		
+		addComponentToPanel(board.getBtnHelp(), pnlEast, new Bounds(20,15,30, 30));
+		
+		addComponentToPanel(board.getBtnAbout(), pnlEast, new Bounds(55,15,30, 30));
 
-	
-	*/
+			
+				
+		board.getLblBig().setBounds(300,10,300,60);
+		board.getLblBig().setForeground(Color.WHITE);
+		pnlSouth.add(board.getLblBig());
 		
-	//-----------------------------ACTIONLISTENER-----------------------------------//
-	setActionListners();
+		board.getLblTrack().setBounds(0,0,650,100);
+		pnlSouth.add(board.getLblTrack());
+		
+		board.getLblProgress().setBounds(0,40,100,60);
+		pnlSouth.add(board.getLblProgress());
+		
+		setActionListners();
 	
 	//-----------------------------------CONTAINER----------------------------------//
 		Container c = getContentPane();
@@ -134,7 +116,7 @@ private GameBoard board;
 		c.add(pnlWest, BorderLayout.WEST);   
 		c.add(pnlEast, BorderLayout.EAST);
 		c.add(pnlCenter, BorderLayout.CENTER);
-		//c.add(pnlSouth, BorderLayout.SOUTH);
+		c.add(pnlSouth, BorderLayout.SOUTH);
 		setSize(650,425);
 		setVisible(true);
 		setResizable(false);
@@ -142,42 +124,22 @@ private GameBoard board;
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 	}
-	private void setUpEast(JPanel pnlEast) {
-		pnlEast.setLayout(null);  		
-		pnlEast.setPreferredSize(new Dimension(100,200));
-		
-		//----------Add--------//
-		pnlEast.add(board.getLblLevel());
-		pnlEast.add(board.getLblPoints());
-		pnlEast.add(board.getLblNrpoints());
-		pnlEast.add(board.getLblBoard());
-		pnlEast.add(board.getBtnHelp());
-		pnlEast.add(board.getBtnAbout());
+	
+	private void addComponentToPanel(JComponent component, JPanel panel, Bounds bounds) {
+		component.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
+		panel.add(component);
 	}
-	private void setUpBoard(JPanel panel) {
-	/*	//--------Buttons-------//
-		lblAnswer = new JLabel();
-		txtSum = new JTextArea(3,1);
-		lblSum = new JLabel(" = " + sum);
-		
-		//--------Layout-------//
-		txtSum.setBounds(45,50,250,190);
-		lblAnswer.setBounds(40,0,320,60);
-		txtSum.setLineWrap(true);
-		lblSum.setBounds(200,220,100,80);
-		txtSum.setBorder(null);
-		lblAnswer.setFont(new Font("Courier", Font.BOLD, 18));
-		txtSum.setFont(new Font("Courier", Font.BOLD, 16));
-		lblSum.setFont(new Font("Courier", Font.BOLD, 24));
-		txtSum.setForeground(Color.WHITE);
-		txtSum.setBackground(Color.BLACK);
-		txtSum.setEditable(false);
-		
-		panel.add(txtSum);
-		panel.add(lblSum);
-		panel.add(lblAnswer);*/
+	
+
+	
+	private JPanel createPanelWithSize(int width, int height) {
+		JPanel panel = new JPanel();
+		panel.setLayout(null);  
+		panel.setPreferredSize(new Dimension(width, height));
+		return panel;
 	}
-	private NumberPad setUpNumberPad(JPanel panel) {
+
+	private JPanel setUpNumberPadPanel() {
 		ArrayList<JButton> numberButtons = new ArrayList<JButton>();
 		numberButtons.add(new JButton(new ImageIcon(cl.getResource("1.png"))));
 		numberButtons.add(new JButton(new ImageIcon(cl.getResource("2.png"))));
@@ -196,8 +158,6 @@ private GameBoard board;
 		.numberButtons(numberButtons)
 		.build();
 
-
-		//--------Layout-------//
 		numberPad.getLblKalken().setBounds(5,8,92,33);
 		numberPad.getNumberButtons().get(0).setBounds(25,40,45,45);
 		numberPad.getNumberButtons().get(1).setBounds(75,40,45,45);
@@ -212,7 +172,7 @@ private GameBoard board;
 		numberPad.getNumberButtons().get(10).setBounds(120,200,70, 45);
 		
 		numberPad.getNumberButtons().get(9).setEnabled(false);
-		
+		JPanel panel = new JPanel();	
 		panel.add(numberPad.getLblKalken());
 		
 		JButton button;
@@ -225,7 +185,7 @@ private GameBoard board;
 		panel.setLayout(null);  
 		panel.setPreferredSize(new Dimension(200,200));
 		
-		return numberPad;
+		return panel;
 	}
 	
 	
@@ -1093,7 +1053,7 @@ private GameBoard board;
 		
 			*/	
 	}
-	
+
 	
 	
 	public static void main(String[] args) {
