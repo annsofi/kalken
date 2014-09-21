@@ -1,3 +1,4 @@
+package se.annsofi.kalken;
 /*****************************************************
 TNM040
 Authors: Annsofi Pettersson & Gabriella Ivarsson
@@ -67,164 +68,151 @@ private JMenuItem itmExit, itmRestart;
 	//----------------------------------------CENTER--------------------------------//
 	
 		//--------Buttons-------//
+	JPanel pnlCenter = new JPanel();
+	pnlCenter.setLayout(null);  
+	pnlCenter.setPreferredSize(new Dimension(3200,200));
 		lblAnswer = new JLabel();
-		txtSum = new JTextArea(3,1);
-		lblSum = new JLabel(" = " + sum);
-		
-		//--------Layout-------//
-		txtSum.setBounds(45,50,250,190);
 		lblAnswer.setBounds(40,0,320,60);
-		txtSum.setLineWrap(true);
-		lblSum.setBounds(200,220,100,80);
-		txtSum.setBorder(null);
 		lblAnswer.setFont(new Font("Courier", Font.BOLD, 18));
-		txtSum.setFont(new Font("Courier", Font.BOLD, 16));
-		lblSum.setFont(new Font("Courier", Font.BOLD, 24));
+		pnlCenter.add(lblAnswer);
+			
+		txtSum = new JTextArea(3,1);
+		txtSum.setLineWrap(true);
+		txtSum.setBorder(null);
 		txtSum.setForeground(Color.WHITE);
-		//Color myColor = new Color(61, 115, 156);
 		txtSum.setBackground(Color.BLACK);
 		txtSum.setEditable(false);
-	
-		//--------Layout-------//
-		JPanel pnlCenter = new JPanel();
-		pnlCenter.setLayout(null);  
-	
-		//pnlCenter.setBackground(myColor);
-		pnlCenter.setPreferredSize(new Dimension(3200,200));
-		
-		//--------Add-------//
+		txtSum.setFont(new Font("Courier", Font.BOLD, 16));
+		txtSum.setBounds(45,50,250,190);
 		pnlCenter.add(txtSum);
-		pnlCenter.add(lblSum);
-		pnlCenter.add(lblAnswer);
-	
-	//---------------------------------------WEST-----------------------------------//
-		//--------Buttons-------//
-		lblKalken = new JLabel(new ImageIcon(cl.getResource("kalken.png")));
-		btnOne = new JButton(new ImageIcon(cl.getResource("1.png")));
-		btnTwo = new JButton(new ImageIcon(cl.getResource("2.png")));
-		btnThree = new JButton(new ImageIcon(cl.getResource("3.png")));
-		btnFour = new JButton(new ImageIcon(cl.getResource("4.png")));
-		btnFive = new JButton(new ImageIcon(cl.getResource("5.png")));
-		btnSix = new JButton(new ImageIcon(cl.getResource("6.png")));
-		btnSeven = new JButton(new ImageIcon(cl.getResource("7.png")));
-		btnEight = new JButton(new ImageIcon(cl.getResource("8.png")));
-		btnNine = new JButton(new ImageIcon(cl.getResource("9.png")));
-		btnReset = new JButton(new ImageIcon(cl.getResource("angra.png")));
-		btnLevel = new JButton(new ImageIcon(cl.getResource("level.png")));
-
-		//--------Layout-------//
-		lblKalken.setBounds(5,8,92,33);
-		btnOne.setBounds(25,40,45,45);
-		btnTwo.setBounds(75,40,45,45);
-		btnThree.setBounds(125,40,45,45);
-		btnFour.setBounds(25,90,45, 45);
-		btnFive.setBounds(75,90,45, 45);
-		btnSix.setBounds(125,90,45, 45);
-		btnSeven.setBounds(25,140, 45, 45);
-		btnEight.setBounds(75,140,45, 45);
-		btnNine.setBounds(125,140,45, 45);
-		btnLevel.setBounds(5,200,110, 45);
-		btnReset.setBounds(120,200,70, 45);
 		
-		btnLevel.setEnabled(false);
+		lblSum = new JLabel(" = " + sum);
+		lblSum.setFont(new Font("Courier", Font.BOLD, 24));
+		lblSum.setBounds(200,220,100,80);
+		pnlCenter.add(lblSum);
+
+		
 		JPanel pnlWest = new JPanel();
 		pnlWest.setLayout(null);  
 		pnlWest.setPreferredSize(new Dimension(200,200));
 		
-		 
-		//--------Add-------//
+		lblKalken = new JLabel(new ImageIcon(cl.getResource("kalken.png")));
+		lblKalken.setBounds(5,8,92,33);
 		pnlWest.add(lblKalken);
-		pnlWest.add(btnOne);
-		pnlWest.add(btnTwo);
-		pnlWest.add(btnThree);
-		pnlWest.add(btnFour);
-		pnlWest.add(btnFive);
-		pnlWest.add(btnSix);
-		pnlWest.add(btnSeven);
-		pnlWest.add(btnEight);
-		pnlWest.add(btnNine);
-		pnlWest.add(btnReset);
-		pnlWest.add(btnLevel);
 
-	//---------------------------------------EAST------------------------------------//
-		//-------Labels-------//
-		lblLevel = new JLabel("Level 1");
-		lblPoints = new JLabel("Poäng");
-		lblNrpoints = new JLabel("0");
-		lblBoard  = new JLabel(new ImageIcon(cl.getResource("board.png")));
-		btnHelp = new JButton(new ImageIcon(cl.getResource("helpbutton.png")));
-		btnAbout = new JButton(new ImageIcon(cl.getResource("about.png")));
+		btnOne = new JButton(new ImageIcon(cl.getResource("1.png")));
+		btnOne.setBounds(25,40,45,45);
+		btnOne.addActionListener(this);
+		pnlWest.add(btnOne);
+
+		btnTwo = new JButton(new ImageIcon(cl.getResource("2.png")));
+		btnTwo.setBounds(75,40,45,45);
+		btnTwo.addActionListener(this); 
+		pnlWest.add(btnTwo);
+
+		btnThree = new JButton(new ImageIcon(cl.getResource("3.png")));
+		btnThree.setBounds(125,40,45,45);
+		btnThree.addActionListener(this);
+		pnlWest.add(btnThree);
+
+		btnFour = new JButton(new ImageIcon(cl.getResource("4.png")));
+		btnFour.setBounds(25,90,45, 45);
+		btnFour.addActionListener(this);
+		pnlWest.add(btnFour);
+
+		btnFive = new JButton(new ImageIcon(cl.getResource("5.png")));
+		btnFive.addActionListener(this);
+		btnFive.setBounds(75,90,45, 45);
+		pnlWest.add(btnFive);
 		
-		//--------Layout--------//
-		lblLevel.setBounds(15,40,60,60);
-		lblPoints.setBounds(15,90,60,60);
-		lblNrpoints.setBounds(40,110,60,60);
-		lblBoard.setBounds(0,50,80,130);
-		btnHelp.setBounds(20,15,30, 30);
-		btnAbout.setBounds(55,15,30, 30);
+		btnSix = new JButton(new ImageIcon(cl.getResource("6.png")));
+		btnSix.addActionListener(this);
+		btnSix.setBounds(125,90,45, 45);
+		pnlWest.add(btnSix);
 		
-		lblLevel.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
-		lblPoints.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
-		lblNrpoints.setFont(new Font("Courier", Font.BOLD, 18));
+		btnSeven = new JButton(new ImageIcon(cl.getResource("7.png")));
+		btnSeven.setBounds(25,140, 45, 45);
+		btnSeven.addActionListener(this);
+		pnlWest.add(btnSeven);
+		
+		btnEight = new JButton(new ImageIcon(cl.getResource("8.png")));
+		btnEight.setBounds(75,140,45, 45);
+		btnEight.addActionListener(this);
+		pnlWest.add(btnEight);
+		
+		btnNine = new JButton(new ImageIcon(cl.getResource("9.png")));
+		btnNine.addActionListener(this);
+		btnNine.setBounds(125,140,45, 45);
+		pnlWest.add(btnNine);
+		
+		
+		btnReset = new JButton(new ImageIcon(cl.getResource("angra.png")));
+		btnReset.addActionListener(this);
+		btnReset.setBounds(120,200,70, 45);
+		pnlWest.add(btnReset);
+		
+		btnLevel = new JButton(new ImageIcon(cl.getResource("level.png")));
+		btnLevel.setEnabled(false);
+		btnLevel.addActionListener(this);
+		btnLevel.setBounds(5,200,110, 45);
+		pnlWest.add(btnLevel);
+	
+		
 		JPanel pnlEast = new JPanel();
-		pnlEast.setLayout(null);  
-		
+		pnlEast.setLayout(null);  		
 		pnlEast.setPreferredSize(new Dimension(100,200));
 		
-		//----------Add--------//
+		lblLevel = new JLabel("Level 1");
+		lblLevel.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
+		lblLevel.setBounds(15,40,60,60);
 		pnlEast.add(lblLevel);
-		pnlEast.add(lblNrpoints);
+
+		lblPoints = new JLabel("Poäng");
+		lblPoints.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
+		lblPoints.setBounds(15,90,60,60);
 		pnlEast.add(lblPoints);
+		
+		lblNrpoints = new JLabel("0");
+		lblNrpoints.setFont(new Font("Courier", Font.BOLD, 18));
+		lblNrpoints.setBounds(40,110,60,60);
+		pnlEast.add(lblNrpoints);
+		
+		lblBoard  = new JLabel(new ImageIcon(cl.getResource("board.png")));
+		lblBoard.setBounds(0,50,80,130);
 		pnlEast.add(lblBoard);
+		
+		btnHelp = new JButton(new ImageIcon(cl.getResource("helpbutton.png")));
+		btnHelp.setBounds(20,15,30, 30);
+		btnHelp.addActionListener(this);
 		pnlEast.add(btnHelp);
+		
+		btnAbout = new JButton(new ImageIcon(cl.getResource("about.png")));
+		btnAbout.setBounds(55,15,30, 30);
+		btnAbout.addActionListener(this);
 		pnlEast.add(btnAbout);
-			
-	//--------------------------------------SOUTH-------------------------------------//	
 
-		lblBig = new JLabel();
-		random();
-		lblTrack = new JLabel(new ImageIcon(cl.getResource("travbana.png")));
-		imgHuman=new ImageIcon(cl.getResource("human.png"));
-		imgBike=new ImageIcon(cl.getResource("bike.png"));
-		imgHorse=new ImageIcon(cl.getResource("horse.png"));
-		
-		lblProgress = new JLabel(imgHuman);
-		
-
-		
-		//--------Layout--------//
-		lblBig.setBounds(300,10,300,60);
-		lblTrack.setBounds(0,0,650,100);
-		lblProgress.setBounds(0,40,100,60);
 		JPanel pnlSouth = new JPanel();		
 		pnlSouth.setLayout(null);  
-		lblBig.setForeground(Color.WHITE);
 		pnlSouth.setPreferredSize(new Dimension(550,100));
 		
-		//----------Add--------//
-	
+		lblBig = new JLabel();
+		lblBig.setForeground(Color.WHITE);
+		lblBig.setBounds(300,10,300,60);
 		pnlSouth.add(lblBig);
-		
-		pnlSouth.add(lblProgress);
-		pnlSouth.add(lblTrack);
 
-	
-	
+		lblTrack = new JLabel(new ImageIcon(cl.getResource("travbana.png")));
+		lblTrack.setBounds(0,0,650,100);
+		pnlSouth.add(lblTrack);
 		
-	//-----------------------------ACTIONLISTENER-----------------------------------//
-	btnOne.addActionListener(this);
-	btnTwo.addActionListener(this); 
-	btnThree.addActionListener(this);
-	btnFour.addActionListener(this);
-	btnFive.addActionListener(this);
-	btnSix.addActionListener(this);
-	btnSeven.addActionListener(this);
-	btnEight.addActionListener(this);
-	btnNine.addActionListener(this);
-	btnReset.addActionListener(this);
-	btnLevel.addActionListener(this);
-	btnHelp.addActionListener(this);
-	btnAbout.addActionListener(this);
+		
+		lblProgress = new JLabel(imgHuman);
+		lblProgress.setBounds(0,40,100,60);
+		pnlSouth.add(lblProgress);
+		
+		imgHuman=new ImageIcon(cl.getResource("human.png"));
+		imgBike=new ImageIcon(cl.getResource("bike.png"));		
+		imgHorse=new ImageIcon(cl.getResource("horse.png"));
+		
 	
 	//-----------------------------------CONTAINER----------------------------------//
 		Container c = getContentPane();
@@ -239,6 +227,7 @@ private JMenuItem itmExit, itmRestart;
 		setLocation(500,200);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
+		random();
 	}
 	//-------------------------------BUTTONENABLER-----------------------------------//
 	public void buttonEnabler(){
