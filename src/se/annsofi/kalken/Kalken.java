@@ -8,12 +8,16 @@ University of Linköping - Campus Norrköping
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
+
 import java.applet.*; //to handle sounds
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+
 import javax.swing.border.LineBorder; //a border class
+
 import java.lang.Object.*;
 
 
@@ -32,30 +36,24 @@ private GameBoard board;
 	public Kalken() {
 		cl = ClassLoader.getSystemClassLoader();
 	//----------------------------MENU-----------------------------------//
-	    setUpMenu();
-
-		
+	    setUpMenu();	
 
 		JPanel pnlWest =  setUpNumberPadPanel();
-
-		JPanel pnlEast = createPanelWithSize(100,200);
-			
-		JPanel pnlSouth = createPanelWithSize(550,100);
 			
 		
 		board = new GameBoard.Builder()
-		.lblLevel(new JLabel("Level 1"))
-		.lblPoints(new JLabel("Poäng"))
-		.lblNrpoints(new JLabel("0"))
+		.lblLevel(setLabelFont(new JLabel("Level 1"), new Font("Arial Rounded MT Bold", Font.PLAIN, 13)))
+		.lblPoints(setLabelFont(new JLabel("Poäng"), new Font("Arial Rounded MT Bold", Font.PLAIN, 13)))
+		.lblNrpoints(setLabelFont(new JLabel("0"), new Font("Courier", Font.BOLD, 18)))
 		.lblBoard(new JLabel(new ImageIcon(cl.getResource("board.png"))))
-		.btnHelp(new JButton(new ImageIcon(cl.getResource("helpbutton.png"))))
-		.btnAbout(new JButton(new ImageIcon(cl.getResource("about.png"))))
+		.lblSum( setLabelFont(new JLabel(" = " + sum), new Font("Courier", Font.BOLD, 24)))
+		.lblAnswer(setLabelFont(new JLabel(), new Font("Courier", Font.BOLD, 18)) )
 		.lblTrack(new JLabel(new ImageIcon(cl.getResource("travbana.png"))))
 		.lblProgress(new JLabel(new ImageIcon(cl.getResource("human.png"))))
-		.txtSum( new JTextArea(3,1))
-		.lblSum( new JLabel(" = " + sum))
-		.lblAnswer(new JLabel())
-		.lblBig(new JLabel())
+		.txtSum(setUpChalkBoard(new JTextArea(3,1)))
+		.lblBig(setLabelForgroundColor(new JLabel(), Color.WHITE))
+		.btnHelp(new JButton(new ImageIcon(cl.getResource("helpbutton.png"))))
+		.btnAbout(new JButton(new ImageIcon(cl.getResource("about.png"))))
 		.build();
 		
 		//random();
@@ -65,52 +63,50 @@ private GameBoard board;
 		
 		
 		JPanel pnlCenter = createPanelWithSize(3200,200);
-		board.getLblAnswer().setFont(new Font("Courier", Font.BOLD, 18));
 		addComponentToPanel(board.getLblAnswer(), pnlCenter, new Bounds(40,0,320,60));
-			
-		board.getLblSum().setFont(new Font("Courier", Font.BOLD, 24));
-		addComponentToPanel(board.getLblSum(), pnlCenter, new Bounds(200,220,100,80));
-		
-		board.getTxtSum().setLineWrap(true);		
-		board.getTxtSum().setBorder(null);	
-		board.getTxtSum().setFont(new Font("Courier", Font.BOLD, 16));		
-		board.getTxtSum().setForeground(Color.WHITE);		
-		board.getTxtSum().setBackground(Color.BLACK);
-		board.getTxtSum().setEditable(false);
-		board.getTxtSum().setBounds(45,50,250,190);
-		pnlCenter.add(board.getTxtSum());
+		addComponentToPanel(board.getLblSum(), pnlCenter, new Bounds(200,220,100,80));		
+		addComponentToPanel(board.getTxtSum(), pnlCenter, new Bounds(45,50,250,190));				
 				
-
-		board.getLblLevel().setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
+		JPanel pnlEast = createPanelWithSize(100,200);
 		addComponentToPanel(board.getLblLevel(), pnlEast, new Bounds(15,40,60,60));
-		
-		board.getLblPoints().setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 13));
 		addComponentToPanel(board.getLblPoints(), pnlEast, new Bounds(15,90,60,60));
-		
-		board.getLblNrpoints().setFont(new Font("Courier", Font.BOLD, 18));
-		addComponentToPanel(board.getLblNrpoints(), pnlEast, new Bounds(40,110,60,60));
-		
-		addComponentToPanel(board.getLblBoard(), pnlEast, new Bounds(0,50,80,130));
-		
-		addComponentToPanel(board.getBtnHelp(), pnlEast, new Bounds(20,15,30, 30));
-		
+		addComponentToPanel(board.getLblNrpoints(), pnlEast, new Bounds(40,110,60,60));		
+		addComponentToPanel(board.getLblBoard(), pnlEast, new Bounds(0,50,80,130));		
+		addComponentToPanel(board.getBtnHelp(), pnlEast, new Bounds(20,15,30, 30));		
 		addComponentToPanel(board.getBtnAbout(), pnlEast, new Bounds(55,15,30, 30));
 
-			
+		
+		JPanel pnlSouth = createPanelWithSize(550,100);
+		addComponentToPanel(board.getLblBig(), pnlSouth, new Bounds(300,10,300,60));		
+		addComponentToPanel(board.getLblTrack(), pnlSouth, new Bounds(0,0,650,100));
+		addComponentToPanel(board.getLblProgress(), pnlSouth, new Bounds(0,40,100,60));
 				
-		board.getLblBig().setBounds(300,10,300,60);
-		board.getLblBig().setForeground(Color.WHITE);
-		pnlSouth.add(board.getLblBig());
+		setActionListners();	
+		createContainer(pnlWest, pnlCenter, pnlEast, pnlSouth);
 		
-		board.getLblTrack().setBounds(0,0,650,100);
-		pnlSouth.add(board.getLblTrack());
-		
-		board.getLblProgress().setBounds(0,40,100,60);
-		pnlSouth.add(board.getLblProgress());
-		
-		setActionListners();
+	}
+	private JLabel setLabelFont(JLabel label, Font font){
+		label.setFont(font);
+		return label;
+	}
+
+	private JLabel setLabelForgroundColor(JLabel label, Color color){
+		label.setForeground(color);
+		return label;
+	}
 	
-	//-----------------------------------CONTAINER----------------------------------//
+	private JTextArea setUpChalkBoard(JTextArea area) {
+		area.setFont(new Font("Courier", Font.BOLD, 16));		
+		area.setLineWrap(true);		
+		area.setBorder(null);	
+		area.setEditable(false);
+		area.setForeground(Color.WHITE);		
+		area.setBackground(Color.BLACK);
+		return area;
+	}
+
+	private void createContainer(JPanel pnlWest, JPanel pnlCenter,
+			JPanel pnlEast, JPanel pnlSouth) {
 		Container c = getContentPane();
 		c.setLayout(new BorderLayout());  
 		c.add(pnlWest, BorderLayout.WEST);   
@@ -122,15 +118,12 @@ private GameBoard board;
 		setResizable(false);
 		setLocation(500,200);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
 	}
 	
 	private void addComponentToPanel(JComponent component, JPanel panel, Bounds bounds) {
 		component.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
 		panel.add(component);
 	}
-	
-
 	
 	private JPanel createPanelWithSize(int width, int height) {
 		JPanel panel = new JPanel();
